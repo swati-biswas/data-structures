@@ -1,0 +1,95 @@
+# python3
+
+import sys, threading
+sys.setrecursionlimit(10**6) # max depth of recursion
+threading.stack_size(2**27)  # new thread will get stack of such size
+
+class Node:
+  def __init__(self, key, left, right, parent):
+   self.key = key
+   self.left = left
+   self.right = right
+   self.parent = parent
+
+class TreeOrders:
+  def read(self):
+    self.n = int(sys.stdin.readline())
+    self.treeNodes = [0 for i in range(self.n)]
+    tn = self.treeNodes
+    for i in range(self.n):
+      [a, b, c] = map(int, sys.stdin.readline().split())
+      if tn[i] == 0:
+       tn[i] = Node(a, b, c, -1)
+      else:
+       node = tn[i]
+       node.key = a
+       node.left = b
+       node.right = c
+      if b != -1: #set parent for left node     
+       if tn[b] == 0:
+        tn[b] = Node(-1, -1, -1, i)
+       else:
+        node = tn[b]
+        node.parent = i
+      if c != -1: #set parent for right node
+       if tn[c] == 0:
+        tn[c] = Node(-1, -1, -1, i)
+       else:
+        node = tn[c]
+        node.parent = i
+
+  def traverseInOrder(self, n):
+    n = self.treeNodes[n]
+    l_node = n.left
+    r_node = n.right
+    if l_node != -1:
+     self.traverseInOrder(l_node)
+    self.result.append(n.key)
+    if r_node != -1:
+     self.traverseInOrder(r_node)
+
+  def traversePreOrder(self, n):
+    n = self.treeNodes[n]
+    l_node = n.left
+    r_node = n.right
+    self.result.append(n.key)
+    if l_node != -1:
+     self.traversePreOrder(l_node)
+    if r_node != -1:
+     self.traversePreOrder(r_node)
+
+  def traversePostOrder(self, n):
+    n = self.treeNodes[n]
+    l_node = n.left
+    r_node = n.right
+    if l_node != -1:
+     self.traversePostOrder(l_node)    
+    if r_node != -1:
+     self.traversePostOrder(r_node)
+    self.result.append(n.key)
+     
+  def inOrder(self):
+    self.result = []
+    self.traverseInOrder(0)
+    return self.result
+
+  def preOrder(self):
+    self.result = []
+    self.traversePreOrder(0)
+    return self.result
+
+  def postOrder(self):
+    self.result = []
+    self.traversePostOrder(0)
+    return self.result
+                
+    return self.result
+
+def main():
+	tree = TreeOrders()
+	tree.read()
+	print(" ".join(str(x) for x in tree.inOrder()))
+	print(" ".join(str(x) for x in tree.preOrder()))
+	print(" ".join(str(x) for x in tree.postOrder()))
+
+threading.Thread(target=main).start()
